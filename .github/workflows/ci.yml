@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run shell syntax check
+      run: |
+        bash -n bin/sysupdate
+        bash -n lib/*.sh
+
+    - name: Run tests
+      run: |
+        chmod +x tests/test.sh
+        ./tests/test.sh
