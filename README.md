@@ -44,7 +44,7 @@ and lack **standardization, visibility, and automation**.
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/sysupdate-cli.git
+git clone https://github.com/Minela-WKM/sysupdate-cli.git
 cd sysupdate-cli
 chmod +x install.sh
 ./install.sh
