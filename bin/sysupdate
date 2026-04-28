@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+set -euo pipefail
 
-source "$BASE_DIR/lib/core.sh"
+# Detect if running installed or from repo
+if [ -d "/usr/local/lib/sysupdate" ]; then
+    LIB_DIR="/usr/local/lib/sysupdate"
+else
+    BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+    LIB_DIR="$BASE_DIR/lib"
+fi
+
+source "$LIB_DIR/core.sh"
 
 main "$@"
