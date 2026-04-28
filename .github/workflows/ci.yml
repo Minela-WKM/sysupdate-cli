@@ -10,12 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-    - name: Run shell syntax check
+    - name: Validate repo contract
       run: |
-        bash -n bin/sysupdate
-        bash -n lib/*.sh
+        required_files=("bin/sysupdate" "lib/core.sh" "README.md")
+
+        for file in "${required_files[@]}"; do
+          test -f "$file" || { echo "Missing $file"; exit 1; }
+        done
+
+    - name: Check script exists
+      run: |
+        test -f bin/sysupdate || (echo "❌ bin/sysupdate missing" && exit 1)
+
+    - name: Shell syntax check (entrypoint)
+      run: bash -n bin/sysupdate
+
+    - name: Shell syntax check (libs)
+      run: bash -n lib/*.sh
 
     - name: Run tests
       run: |
