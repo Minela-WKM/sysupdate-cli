@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$(dirname "$0")/utils.sh"
+# LIB_DIR doit être fourni par l'entrypoint (sysupdate)
+# fallback pour dev si non défini
+if [[ -z "${LIB_DIR:-}" ]]; then
+    LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+
+# Load utils
+source "$LIB_DIR/utils.sh"
 
 detect_pm() {
     command -v apt >/dev/null && echo "apt" && return
@@ -20,7 +27,8 @@ main() {
     PM=$(detect_pm)
     log_json "info" "Using package manager: $PM"
 
-    source "$(dirname "$0")/pm_${PM}.sh"
+    # Load package manager handler
+    source "$LIB_DIR/pm_${PM}.sh"
+
     run_updates
 }
-

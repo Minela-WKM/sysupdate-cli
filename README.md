@@ -37,7 +37,7 @@ and lack **standardization, visibility, and automation**.
 
 ## 🎬 Demo
 
-![demo](docs/demo.gif)
+![demo](docs/demo_verb.gif)
 
 ---
 

@@ -38,24 +38,37 @@ log_json() {
         | tee -a "$JSON_LOG" >/dev/null
 }
 
-run_cmd() {
-    local cmd="$*"
 
-    log "▶ $cmd"
-    log_json "info" "$cmd"
+run_cmd() {
+    log "▶ $*"
+    log_json "info" "$*"
 
     if [ "$DRY_RUN" = true ]; then
-        log "DRY RUN"
-        log_json "warn" "Dry run skipped command"
+        log "⚠️ DRY RUN"
+        log_json "warn" "Skipped command"
         return 0
     fi
 
-    if eval "$cmd" >> "$LOG_FILE" 2>&1; then
-        log "OK"
-        log_json "success" "$cmd"
+    if [ "$VERBOSE" = true ]; then
+        # Affiche ET log
+        if "$@" 2>&1 | tee -a "$LOG_FILE"; then
+            log "✅ OK"
+            log_json "success" "$*"
+        else
+            log "❌ FAILED"
+            log_json "error" "$*"
+            exit 1
+        fi
     else
-        log "FAILED"
-        log_json "error" "$cmd"
-        exit 1
+        # Log seulement + feedback minimal
+        if "$@" >> "$LOG_FILE" 2>&1; then
+            echo "✔ Done"
+            log_json "success" "$*"
+        else
+            echo "✖ Failed"
+            log_json "error" "$*"
+            exit 1
+        fi
     fi
 }
+
