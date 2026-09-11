@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
 # Detect if running installed or from repo
 if [ -d "/usr/local/lib/sysupdate" ]; then
     LIB_DIR="/usr/local/lib/sysupdate"
