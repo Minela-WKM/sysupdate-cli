@@ -31,11 +31,14 @@ log() {
 log_json() {
     local level="$1"
     local message="$2"
-    local timestamp
-    timestamp=$(date -Iseconds)
+    local ts
 
-    echo "{\"time\":\"$timestamp\",\"level\":\"$level\",\"message\":\"$message\"}" \
-        | tee -a "$JSON_LOG" >/dev/null
+    # ⚡ Bolt: Fast ISO8601 generation using bash built-in instead of `date` subshell
+    printf -v ts '%(%Y-%m-%dT%H:%M:%S%z)T' -1
+    ts="${ts:0:22}:${ts:22:2}" # Format +0000 to +00:00
+
+    # ⚡ Bolt: Use direct append instead of `tee` pipeline to avoid process forks
+    printf '{"time":"%s","level":"%s","message":"%s"}\n' "$ts" "$level" "$message" >> "$JSON_LOG"
 }
 
 
