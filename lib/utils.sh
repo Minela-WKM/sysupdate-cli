@@ -34,8 +34,7 @@ log_json() {
     local timestamp
     timestamp=$(date -Iseconds)
 
-    echo "{\"time\":\"$timestamp\",\"level\":\"$level\",\"message\":\"$message\"}" \
-        | tee -a "$JSON_LOG" >/dev/null
+    echo "{\"time\":\"$timestamp\",\"level\":\"$level\",\"message\":\"$message\"}" >> "$JSON_LOG"
 }
 
 
