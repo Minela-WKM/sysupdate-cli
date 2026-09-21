@@ -1,3 +1,5 @@
 ## 2026-09-11 - Shell Script Subshells & Process Forking in Logging
 **Learning:** In Bash, using command substitution like `$(date)` or piping to utilities like `| tee` for frequent logging causes immense overhead due to constant process forking. A pipeline `echo ... | tee ... > /dev/null` spawns at least two processes just to append a line. For high-frequency functions, this can slow down execution dramatically (e.g. from 0.07s to 6.00s for 1000 calls).
-**Action:** Replace external commands with Bash built-ins wherever possible in tight loops or frequent calls (like logging). For timestamps, use `printf '%(%Y-%m-%dT%H:%M:%S%z)T' -1` instead of `date`. For file appending, use `>> file` instead of `| tee -a file > /dev/null`.
+**Action:** Replace external commands with Bash built-ins wherever possible in tight loops or frequent calls (like logging). For timestamps, use `printf '%(%Y-%m-%dT%H:%M:%S%z)T' -1` instead of `date`. For file appending, use `>> file` instead of `| tee -a file > /dev/null`.## 2024-09-21 - Optimize bash log function
+**Learning:** Avoid piping simple bash builtin outputs (like `echo`) to external commands (like `tee`) when possible. Pipes require forking process which causes substantial overhead.
+**Action:** Use direct shell redirection built-ins instead of pipes when saving single lines of string data.
