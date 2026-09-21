@@ -25,7 +25,9 @@ require_root() {
 }
 
 log() {
-    echo -e "$1" | tee -a "$LOG_FILE"
+    # ⚡ Bolt: Avoid process forks by replacing tee with direct redirection
+    echo -e "$1"
+    echo -e "$1" >> "$LOG_FILE"
 }
 
 log_json() {
