@@ -59,4 +59,25 @@ assert_equal "false" "$DRY_RUN" "Unknown arg: DRY_RUN should be false"
 assert_equal "false" "$CHECK_MODE" "Unknown arg: CHECK_MODE should be false"
 
 echo "All parse_args tests passed!"
+
+echo "Running tests for log terminal injection fix..."
+
+# Use a temporary log file for testing
+export LOG_FILE="/tmp/test_sysupdate.log"
+rm -f "$LOG_FILE"
+
+# Call log with malicious payload
+test_payload='\nmalicious'
+log_output=$(log "$test_payload")
+
+assert_equal '\nmalicious' "$log_output" "log output handles escape sequences securely"
+
+# Check that the log file also contains the literal
+log_file_content=$(cat "$LOG_FILE")
+
+assert_equal '\nmalicious' "$log_file_content" "log file content handles escape sequences securely"
+
+rm -f "$LOG_FILE"
+
+echo "All log tests passed!"
 exit 0

@@ -25,7 +25,7 @@ require_root() {
 }
 
 log() {
-    echo -e "$1" | tee -a "$LOG_FILE"
+    printf '%s\n' "$1" | tee -a "$LOG_FILE"
 }
 
 log_json() {
