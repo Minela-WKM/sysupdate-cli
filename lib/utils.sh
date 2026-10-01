@@ -37,6 +37,13 @@ log_json() {
     printf -v ts '%(%Y-%m-%dT%H:%M:%S%z)T' -1
     ts="${ts:0:22}:${ts:22:2}" # Format +0000 to +00:00
 
+    # Sanitize message to prevent JSON injection
+    message="${message//\\/\\\\}"
+    message="${message//\"/\\\"}"
+    message="${message//$'\n'/\\n}"
+    message="${message//$'\r'/\\r}"
+    message="${message//$'\t'/\\t}"
+
     # ⚡ Bolt: Use direct append instead of `tee` pipeline to avoid process forks
     printf '{"time":"%s","level":"%s","message":"%s"}\n' "$ts" "$level" "$message" >> "$JSON_LOG"
 }

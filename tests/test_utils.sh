@@ -60,6 +60,57 @@ assert_equal "false" "$CHECK_MODE" "Unknown arg: CHECK_MODE should be false"
 
 echo "All parse_args tests passed!"
 
+echo "Running tests for log_json..."
+
+# Setup temporary log file
+export JSON_LOG="/tmp/sysupdate_test.json"
+rm -f "$JSON_LOG"
+
+# Test 7: Normal message
+log_json "info" "Normal message"
+last_line=$(tail -n 1 "$JSON_LOG")
+if [[ "$last_line" == *"\"message\":\"Normal message\""* ]]; then
+    echo "✅ PASS: Normal message logging"
+else
+    echo "❌ FAIL: Normal message logging (Got: $last_line)"
+    exit 1
+fi
+
+# Test 8: Message with double quotes
+log_json "warn" 'Message with "quotes"'
+last_line=$(tail -n 1 "$JSON_LOG")
+if [[ "$last_line" == *"\"message\":\"Message with \\\"quotes\\\"\""* ]]; then
+    echo "✅ PASS: Message with double quotes logging"
+else
+    echo "❌ FAIL: Message with double quotes logging (Got: $last_line)"
+    exit 1
+fi
+
+# Test 9: Message with backslashes
+log_json "error" 'Path C:\Windows\System32'
+last_line=$(tail -n 1 "$JSON_LOG")
+if [[ "$last_line" == *"\"message\":\"Path C:\\\\Windows\\\\System32\""* ]]; then
+    echo "✅ PASS: Message with backslashes logging"
+else
+    echo "❌ FAIL: Message with backslashes logging (Got: $last_line)"
+    exit 1
+fi
+
+# Test 10: Message with control characters (newline, tab, carriage return)
+log_json "info" $'Line 1\nLine 2\tTabbed\rReturn'
+last_line=$(tail -n 1 "$JSON_LOG")
+if [[ "$last_line" == *"\"message\":\"Line 1\\nLine 2\\tTabbed\\rReturn\""* ]]; then
+    echo "✅ PASS: Message with control characters logging"
+else
+    echo "❌ FAIL: Message with control characters logging (Got: $last_line)"
+    exit 1
+fi
+
+# Cleanup
+rm -f "$JSON_LOG"
+
+echo "All log_json tests passed!"
+
 echo "Running tests for log terminal injection fix..."
 
 # Use a temporary log file for testing
