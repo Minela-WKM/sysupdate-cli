@@ -1,7 +1,7 @@
 run_updates() {
     if [ "$CHECK_MODE" = true ]; then
-        apt list --upgradable
-        exit 0
+        run_cmd apt list --upgradable
+        return 0
     fi
 
     run_cmd apt update
