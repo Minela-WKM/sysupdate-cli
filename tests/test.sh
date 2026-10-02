@@ -11,3 +11,4 @@ bash -n "$DIR/../lib/"*.sh
 echo "Syntax OK"
 
 bash "$DIR/test_utils.sh"
+bash "$DIR/test_pm_yum.sh"
